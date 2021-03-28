@@ -17,16 +17,21 @@ def load_img(blob:bytes):
         params=search_params, 
         files=files,
     )
+    
     query_string = json.loads(response.content)['blocks'][0]['params']['url']
     params = json.loads(response.content)['blocks'][0]['params']
 
     return params
 
 def search_img(params):
+    '''Совершает поиск на основе параметров загруженной картинки.
+
+    params-json параметров картинки.'''
     rpt = 'imageview'
     from_ = 'tabbar'
     http_url = f"https://yandex.ru/images/search?rpt={rpt}&url={params['originalImageUrl']}&cbir_id={params['cbirId']}&from={from_}"
     r = requests.get(http_url)
+
     soup = BeautifulSoup(r.text, 'lxml')
     parent_block = soup.find('div', 
         class_='cbir-search-by-image-page__section cbir-search-by-image-page__section_name_tags'
